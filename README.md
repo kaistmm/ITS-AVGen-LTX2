@@ -1,21 +1,73 @@
-# LTX-2
-
-[![Website](https://img.shields.io/badge/Website-LTX-181717?logo=google-chrome)](https://ltx.io)
-[![Model](https://img.shields.io/badge/HuggingFace-Model-orange?logo=huggingface)](https://huggingface.co/Lightricks/LTX-2.3)
-[![Demo](https://img.shields.io/badge/Demo-Try%20Now-brightgreen?logo=vercel)](https://app.ltx.studio/ltx-2-playground/i2v)
-[![Paper](https://img.shields.io/badge/Paper-PDF-EC1C24?logo=adobeacrobatreader&logoColor=white)](https://arxiv.org/abs/2601.03233)
-[![Discord](https://img.shields.io/badge/Join-Discord-5865F2?logo=discord)](https://discord.gg/ltxplatform)
-
-**LTX-2** is the first DiT-based audio-video foundation model that contains all core capabilities of modern video generation in one model: synchronized audio and video, high fidelity, multiple performance modes, production-ready outputs, API access, and open access.
+## <div align="center">[TMLR] Inference Time Scaling for Joint Audio-Video Generation</div>
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/4414adc0-086c-43de-b367-9362eeb20228" width="70%" poster=""> </video>
+
+**[Jaemin Jung](https://jung-jaemin.github.io/)**<sup>1</sup>, [Kyeongha Rho](https://kyeongharho.github.io/)<sup>1</sup>, [Inkyu Shin](https://dlsrbgg33.github.io/)<sup>2</sup>, [Joon Son Chung](https://mm.kaist.ac.kr/joon/)<sup>1</sup>
+
+<sup>1</sup> KAIST, <sup>2</sup> Luma AI
+
+[[`Paper`](https://openreview.net/forum?id=MHNFjjm5nO)] 
+[[`Project Page`](https://openreview.net/forum?id=MHNFjjm5nO)]
+[[`Open Review`](https://openreview.net/forum?id=MHNFjjm5nO)]
+
 </div>
 
-## 🚀 Quick Start
+---
+
+<p align="center">
+  <img src="assets/src/7_avits.gif" width="70%">
+</p>
+
+---
+
+## Brief Introduction
+
+<p align="center">
+  <a href="assets/src/main.pdf" target="_blank">
+    <img src="assets/src/main.png" width="80%">
+  </a>
+</p>
+
+**Inference Time Scaling (ITS)** extends generation quality without retraining by leveraging pre-trained reward models at inference time.
+
+Rather than generating a single sample through the diffusion process, ITS generates a population of diverse candidates and uses reward signals (video quality, audio-video synchronization, etc.) to iteratively refine them. This approach enables:
+
+- **BON (Best-of-N)**: Generate N samples and select the best one using reward ranking
+- **ARW (Adaptive Reward Weighting)**: Dynamically optimize reward weight combinations for your use case
+
+Key advantages:
+- ✅ No additional training required
+- ✅ Works with LTX-2 pre-trained models
+- ✅ Flexible reward combinations (Video Quality, Temporal Alignment, JavisScore, etc.)
+- ✅ Significant quality improvements (up to +34% on sync metrics)
+
+### 🎬 Supported Joint Audio-Video Generation Models
+
+1. **[JavisDiT](https://github.com/JavisVerse/JavisDiT)** — Joint Audio-Video Diffusion Transformer
+   - Synchronized audio-video generation with spatio-temporal priors
+
+2. **LTX-2** ⭐ **— Most powerful audio-video generation model**
+   - State-of-the-art quality and synchronization
+   - Recommended for best results
+   - Production-ready outputs with multiple resolution modes
+
+3. **[MMDisCo](https://github.com/SonyResearch/MMDisCo)** — Cooperative Diffusion for Joint Audio-Video Generation (TBD)
+   - Discriminator-guided multimodal generation
+   - *Code will be released soon*
+
+---
+
+> For LTX-2 base model details, installation, and capabilities, refer to the [LTX-2 repository](https://github.com/Lightricks/LTX-2).
+
+---
+
+## Quick Start
+
+### 1. Install LTX-2
+
+Clone this ITS repository:
 
 ```bash
-# Clone the repository
 git clone https://github.com/Lightricks/LTX-2.git
 cd LTX-2
 
@@ -24,96 +76,275 @@ uv sync --frozen
 source .venv/bin/activate
 ```
 
-### Required Models
+### 2. Download Required Models
 
-Download the following models from the [LTX-2.3 HuggingFace repository](https://huggingface.co/Lightricks/LTX-2.3):
+Download from the [LTX-2.3 HuggingFace repository](https://huggingface.co/Lightricks/LTX-2.3):
 
-**LTX-2.3 Model Checkpoint** (choose and download one of the following)
-  * [`ltx-2.3-22b-dev.safetensors`](https://huggingface.co/Lightricks/LTX-2.3/blob/main/ltx-2.3-22b-dev.safetensors) - [Download](https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-22b-dev.safetensors)
-  * [`ltx-2.3-22b-distilled.safetensors`](https://huggingface.co/Lightricks/LTX-2.3/blob/main/ltx-2.3-22b-distilled.safetensors) - [Download](https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-22b-distilled.safetensors)
+**LTX-2.3 Model Checkpoint** (choose one):
+```bash
+# Development version (better quality)
+wget https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-22b-dev.safetensors \
+    -O ./checkpoints/LTX2.3/ltx-2.3-22b-dev.safetensors
 
-**Spatial Upscaler** - Required for current two-stage pipeline implementations in this repository
-  * [`ltx-2.3-spatial-upscaler-x2-1.0.safetensors`](https://huggingface.co/Lightricks/LTX-2.3/blob/main/ltx-2.3-spatial-upscaler-x2-1.0.safetensors) - [Download](https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-spatial-upscaler-x2-1.0.safetensors)
-  * [`ltx-2.3-spatial-upscaler-x1.5-1.0.safetensors`](https://huggingface.co/Lightricks/LTX-2.3/blob/main/ltx-2.3-spatial-upscaler-x1.5-1.0.safetensors) - [Download](https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-spatial-upscaler-x1.5-1.0.safetensors)
+# Or distilled version (faster)
+wget https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-22b-distilled.safetensors \
+    -O ./checkpoints/LTX2.3/ltx-2.3-22b-distilled.safetensors
+```
 
-**Temporal Upscaler** - Supported by the model and will be required for future pipeline implementations
-  * [`ltx-2.3-temporal-upscaler-x2-1.0.safetensors`](https://huggingface.co/Lightricks/LTX-2.3/blob/main/ltx-2.3-temporal-upscaler-x2-1.0.safetensors) - [Download](https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-temporal-upscaler-x2-1.0.safetensors)
+**Gemma-3 Text Encoder:**
 
-**Distilled LoRA** - Required for current two-stage pipeline implementations in this repository (except DistilledPipeline and ICLoraPipeline)
-  * [`ltx-2.3-22b-distilled-lora-384.safetensors`](https://huggingface.co/Lightricks/LTX-2.3/blob/main/ltx-2.3-22b-distilled-lora-384.safetensors) - [Download](https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-22b-distilled-lora-384.safetensors)
+Download from [HuggingFace](https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-unquantized/tree/main) and place in `./checkpoints/LTX2/gemma3/`:
 
-**Gemma Text Encoder** (download all assets from the repository)
-  * [`Gemma 3`](https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-unquantized/tree/main)
+**Spatial Upscaler (Optional):**
+```bash
+wget https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-spatial-upscaler-x2-1.0.safetensors \
+    -O ./checkpoints/LTX2.3/ltx-2.3-spatial-upscaler-x2-1.0.safetensors
+```
 
-**LoRAs**
-  * [`LTX-2.3-22b-IC-LoRA-Union-Control`](https://huggingface.co/Lightricks/LTX-2.3-22b-IC-LoRA-Union-Control) - [Download](https://huggingface.co/Lightricks/LTX-2.3-22b-IC-LoRA-Union-Control/resolve/main/ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors)
-  * [`LTX-2.3-22b-IC-LoRA-Motion-Track-Control`](https://huggingface.co/Lightricks/LTX-2.3-22b-IC-LoRA-Motion-Track-Control) - [Download](https://huggingface.co/Lightricks/LTX-2.3-22b-IC-LoRA-Motion-Track-Control/resolve/main/ltx-2.3-22b-ic-lora-motion-track-control-ref0.5.safetensors)
-  * [`LTX-2-19b-IC-LoRA-Detailer`](https://huggingface.co/Lightricks/LTX-2-19b-IC-LoRA-Detailer) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-IC-LoRA-Detailer/resolve/main/ltx-2-19b-ic-lora-detailer.safetensors)
-  * [`LTX-2-19b-IC-LoRA-Pose-Control`](https://huggingface.co/Lightricks/LTX-2-19b-IC-LoRA-Pose-Control) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-IC-LoRA-Pose-Control/resolve/main/ltx-2-19b-ic-lora-pose-control.safetensors)
-  * [`LTX-2-19b-LoRA-Camera-Control-Dolly-In`](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-In) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-In/resolve/main/ltx-2-19b-lora-camera-control-dolly-in.safetensors)
-  * [`LTX-2-19b-LoRA-Camera-Control-Dolly-Left`](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Left) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Left/resolve/main/ltx-2-19b-lora-camera-control-dolly-left.safetensors)
-  * [`LTX-2-19b-LoRA-Camera-Control-Dolly-Out`](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Out) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Out/resolve/main/ltx-2-19b-lora-camera-control-dolly-out.safetensors)
-  * [`LTX-2-19b-LoRA-Camera-Control-Dolly-Right`](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Right) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Right/resolve/main/ltx-2-19b-lora-camera-control-dolly-right.safetensors)
-  * [`LTX-2-19b-LoRA-Camera-Control-Jib-Down`](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Down) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Down/resolve/main/ltx-2-19b-lora-camera-control-jib-down.safetensors)
-  * [`LTX-2-19b-LoRA-Camera-Control-Jib-Up`](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Up) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Up/resolve/main/ltx-2-19b-lora-camera-control-jib-up.safetensors)
-  * [`LTX-2-19b-LoRA-Camera-Control-Static`](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Static) - [Download](https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Static/resolve/main/ltx-2-19b-lora-camera-control-static.safetensors)
+### 3. Reward Server Environment Setup
 
-### Available Pipelines
+The reward server requires additional dependencies for inference time scaling (BON or ARW).
 
-* **[TI2VidTwoStagesPipeline](packages/ltx-pipelines/src/ltx_pipelines/ti2vid_two_stages.py)** - Production-quality text/image-to-video with 2x upsampling (recommended)
-* **[TI2VidTwoStagesHQPipeline](packages/ltx-pipelines/src/ltx_pipelines/ti2vid_two_stages_hq.py)** - Same two-stage flow as above but uses the res_2s second-order sampler (fewer steps, better quality)
-* **[TI2VidOneStagePipeline](packages/ltx-pipelines/src/ltx_pipelines/ti2vid_one_stage.py)** - Single-stage generation for quick prototyping
-* **[DistilledPipeline](packages/ltx-pipelines/src/ltx_pipelines/distilled.py)** - Fastest inference with 8 predefined sigmas
-* **[ICLoraPipeline](packages/ltx-pipelines/src/ltx_pipelines/ic_lora.py)** - Video-to-video and image-to-video transformations (uses distilled model.)
-* **[KeyframeInterpolationPipeline](packages/ltx-pipelines/src/ltx_pipelines/keyframe_interpolation.py)** - Interpolate between keyframe images
-* **[A2VidPipelineTwoStage](packages/ltx-pipelines/src/ltx_pipelines/a2vid_two_stage.py)** - Audio-to-video generation conditioned on an input audio file
-* **[RetakePipeline](packages/ltx-pipelines/src/ltx_pipelines/retake.py)** - Regenerate a specific time region of an existing video
+**Separate environment for reward server (recommended):**
 
-### ⚡ Optimization Tips
+```bash
+# Create separate conda env
+conda create -n reward-server python=3.10
+conda activate reward-server
 
-* **Use DistilledPipeline** - Fastest inference with only 8 predefined sigmas (8 steps stage 1, 4 steps stage 2)
-* **Enable FP8 quantization** - Enables lower memory footprint: `--quantization fp8-cast` (CLI) or `quantization=QuantizationPolicy.fp8_cast()` (Python). For Hopper GPUs with TensorRT-LLM, use `--quantization fp8-scaled-mm` for FP8 scaled matrix multiplication.
-* **Install attention optimizations** - Use xFormers (`uv sync --extra xformers`) or [Flash Attention 3](https://github.com/Dao-AILab/flash-attention) for Hopper GPUs
-* **Use gradient estimation** - Reduce inference steps from 40 to 20-30 while maintaining quality (see [pipeline documentation](packages/ltx-pipelines/README.md#denoising-loop-optimization))
-* **Skip memory cleanup** - If you have sufficient VRAM, disable automatic memory cleanup between stages for faster processing
-* **Choose single-stage pipeline** - Use `TI2VidOneStagePipeline` for faster generation when high resolution isn't required
+# Install PyTorch (required for this env)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-## ✍️ Prompting for LTX-2
+# Install evaluation dependencies
+pip install -r requirements/requirements-eval.txt
+pip install imagebind-huge einops ftfy
 
-When writing prompts, focus on detailed, chronological descriptions of actions and scenes. Include specific movements, appearances, camera angles, and environmental details - all in a single flowing paragraph. Start directly with the action, and keep descriptions literal and precise. Think like a cinematographer describing a shot list. Keep within 200 words. For best results, build your prompts using this structure:
+# Optional: Install CLAP
+pip install transformers[audio]>=4.33.0
+```
 
-- Start with main action in a single sentence
-- Add specific details about movements and gestures
-- Describe character/object appearances precisely
-- Include background and environment details
-- Specify camera angles and movements
-- Describe lighting and colors
-- Note any changes or sudden events
+Then run `bash scripts/vqa_server.sh [GPU_ID]` in this separate environment.
 
-For additional guidance on writing a prompt please refer to <https://ltx.video/blog/how-to-prompt-for-ltx-2>
+### 4. Test Installation
 
-### Automatic Prompt Enhancement
+Verify everything works with a quick test:
 
-LTX-2 pipelines support automatic prompt enhancement via an `enhance_prompt` parameter.
+```bash
+bash scripts/inference_one_ltx.sh 0
+# This runs standard inference on GPU 0 with sample prompts
+```
 
-## 🔌 ComfyUI Integration
+If successful, output videos will be saved in the configured output directory.
 
-To use our model with ComfyUI, please follow the instructions at <https://github.com/Lightricks/ComfyUI-LTXVideo/>.
+---
 
-## 📦 Packages
+## Inference Time Scaling
 
-This repository is organized as a monorepo with three main packages:
+### Step 1: Start the Reward Server
 
-* **[ltx-core](packages/ltx-core/)** - Core model implementation, inference stack, and utilities
-* **[ltx-pipelines](packages/ltx-pipelines/)** - High-level pipeline implementations for text-to-video, image-to-video, and other generation modes
-* **[ltx-trainer](packages/ltx-trainer/)** - Training and fine-tuning tools for LoRA, full fine-tuning, and IC-LoRA
+The reward server must run on a separate GPU:
 
-Each package has its own README and documentation. See the [Documentation](#-documentation) section below.
+```bash
+bash scripts/vqa_server.sh [GPU_ID]
+# Example: bash scripts/vqa_server.sh 0
+```
 
-## 📚 Documentation
+This launches reward models on port 5002. Keep this running during generation.
 
-Each package includes comprehensive documentation:
+**Server Configuration Options:**
 
-* **[LTX-Core README](packages/ltx-core/README.md)** - Core model implementation, inference stack, and utilities
-* **[LTX-Pipelines README](packages/ltx-pipelines/README.md)** - High-level pipeline implementations and usage guides
-* **[LTX-Trainer README](packages/ltx-trainer/README.md)** - Training and fine-tuning documentation with detailed guides
+Edit `scripts/vqa_server.sh` or pass arguments directly:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python reward_model/vqa_server.py \
+    --gpu 0 \
+    --addr 5002 \
+    --reward_model [REWARD_MODEL] \
+    --align_model [ALIGN_MODEL]
+```
+
+| Option | Values | Default |
+|--------|--------|---------|
+| `--reward_model` | `VideoReward`, `vqascore` | `VideoReward` |
+| `--align_model` | `JavisScore`, `AVHScore`, `AVIB`, `All`, `None` | `JavisScore` |
+
+**Examples:**
+```bash
+# Default (VideoReward + JavisScore)
+bash scripts/vqa_server.sh 0
+
+# With all alignment models
+CUDA_VISIBLE_DEVICES=0 python reward_model/vqa_server.py \
+    --gpu 0 --addr 5002 \
+    --reward_model VideoReward \
+    --align_model All
+```
+
+### Step 2: Run Inference
+
+#### Option A: Standard (No ITS)
+
+Generate without inference time scaling:
+
+```bash
+bash scripts/inference_one_ltx.sh [GPU_ID] [NSHARD] [SHARD_ID]
+# Single GPU: bash scripts/inference_one_ltx.sh 0
+# Multi-GPU: for i in {0..3}; do bash scripts/inference_one_ltx.sh $i 4 $i & done; wait
+```
+
+**Features:**
+- No ITS - pure LTX-2 generation
+- Single sample per prompt
+- Fast inference
+
+#### Option B: BON (Best-of-N)
+
+Generate N candidates, select best:
+
+```bash
+bash scripts/inference_one_ltx_bon.sh [GPU_ID] [NSHARD] [SHARD_ID]
+# Single GPU: bash scripts/inference_one_ltx_bon.sh 0
+# Multi-GPU: for i in {0..3}; do bash scripts/inference_one_ltx_bon.sh $i 4 $i & done; wait
+```
+
+**Config** (`scripts/inference_one_ltx_bon_config.json`):
+- `BON_SAMPLES` → Number of candidates (default: 10)
+- `BON_AGGREGATION_METHOD` → "arw" (Adaptive Reward Weighting)
+- `BON_REWARD_KEY` → Primary reward metric (TA, VR, etc.)
+- `BON_ALIGN_KEY` → Alignment metric (JS, etc.)
+
+---
+
+## Configuration
+
+BON settings are configured in `scripts/inference_one_ltx_bon_config.json`:
+
+**Reward Models (Metrics):**
+```json
+{
+  "BON_REWARD_KEY": "TA",
+  "BON_ALIGN_KEY": "JS",
+  "BON_REWARD_WEIGHT": 0.5,
+  "BON_ALIGN_WEIGHT": 0.5
+}
+```
+
+Available reward metrics:
+| Metric | Purpose | Description |
+|--------|---------|-------------|
+| `TA` | Temporal Alignment | Audio-video sync quality |
+| `JS` | JavisScore | Audio-visual harmony |
+| `VR` | VideoReward | Overall video quality |
+
+Example with multiple metrics:
+```json
+{
+  "BON_SAMPLES": 10,
+  "BON_REWARD_KEY": "TA",
+  "BON_ALIGN_KEY": "JS",
+  "BON_REWARD_WEIGHT": 0.4,
+  "BON_ALIGN_WEIGHT": 0.6,
+  "BON_AGGREGATION_METHOD": "arw"
+}
+```
+
+**Aggregation Methods:**
+
+BON supports multiple aggregation strategies to combine reward scores:
+
+| Method | Description |
+|--------|-------------|
+| `weighted` | Weighted linear combination of metrics (default) |
+| `rank` | Rank-based normalization before aggregation |
+| `arw` | Adaptive Reward Weighting with learnable weights (recommended) |
+
+**ARW (Adaptive Reward Weighting):**
+
+Dynamically optimize reward weights during inference for best performance:
+
+```json
+{
+  "BON_AGGREGATION_METHOD": "arw",
+  "BON_ARW_LR": 0.05,
+  "BON_ARW_MAX_ITER": 5,
+  "BON_ARW_OPTIMIZER": "Adam"
+}
+```
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `BON_ARW_LR` | 0.05 | Learning rate for weight optimization (0.01-0.1) |
+| `BON_ARW_MAX_ITER` | 5 | Number of optimization iterations (1-10) |
+| `BON_ARW_OPTIMIZER` | Adam | Optimizer type (Adam, SGD) |
+
+---
+
+## Performance Optimization
+
+### FP8 Quantization
+
+Enable lower memory footprint:
+
+```bash
+USE_FP8_CAST=1 bash scripts/inference_one_ltx_bon.sh 0
+```
+
+### Model Reuse
+
+Optimize for multiple prompt processing:
+
+```bash
+BATCH_MODEL_MODE=reuse bash scripts/inference_one_ltx_bon.sh 0
+```
+
+Options:
+- `reuse`: Load model once, process all prompts (memory efficient)
+- `reload`: Load/unload for each prompt (slower, less VRAM)
+
+### Multi-GPU Distributed Processing
+
+Process large datasets efficiently:
+
+```bash
+# Process dataset in 4 shards
+for i in {0..3}; do
+    bash scripts/inference_one_ltx_bon.sh $i 4 $i &
+done
+wait
+```
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Connection refused (5002) | Ensure `vqa_server.sh` is running on separate GPU |
+| Out of memory | Reduce `BON_SAMPLES` in config, enable FP8 quantization, or use reuse mode |
+| CUDA errors | Check CUDA 12.1 compatibility and sufficient VRAM (min. 48GB for dev model) |
+| Slow generation | Enable FP8 quantization, model reuse mode, or reduce BON_SAMPLES |
+
+---
+
+## Citation
+
+```bibtex
+@article{its2024,
+    title={Inference-Time Scaling for Joint Audio--Video Generation},
+    author={Jung, Jaemin and Rho, Kyeongha and Shin, Inkyu and Chung, Joon Son},
+    journal={Transactions on Machine Learning Research},
+    year={2024}
+}
+```
+
+---
+
+## Reference
+
+- **LTX-2 Repository**: https://github.com/Lightricks/LTX-2
+- **LTX-2 Model Card**: https://huggingface.co/Lightricks/LTX-2.3
+- **LTX-2 Paper**: https://arxiv.org/abs/2601.03233
+- **JavisDiT**: https://github.com/JavisVerse/JavisDiT
+- **Paper**: https://openreview.net/forum?id=MHNFjjm5nO
+
+For questions, open an issue or contact the authors.
