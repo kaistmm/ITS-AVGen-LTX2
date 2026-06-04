@@ -1,20 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Parse GPU ID from first argument
+GPU_ID="${1:-0}"
+NSHARD="${2:-1}"
+SHARD="${3:-0}"
+
 CHECKPOINT_PATH="${CHECKPOINT_PATH:-./checkpoints/LTX2.3/ltx-2.3-22b-dev.safetensors}"
 GEMMA_ROOT="${GEMMA_ROOT:-./checkpoints/LTX2/gemma3}"
-PROMPT_FILE="${PROMPT_FILE:-./data/JavisBench/JavisBench-mini-ltx2.csv}"
+PROMPT_FILE="${PROMPT_FILE:-./data/JavisBench/JavisBench-mini.csv}"
 OUTPUT_DIR="${OUTPUT_DIR:-./results/test_output}"
+HEIGHT="${HEIGHT:-512}"
+WIDTH="${WIDTH:-768}"
 
-CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
+CUDA_VISIBLE_DEVICES="${GPU_ID}"
 PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 PYTHON_BIN="${PYTHON_BIN:-python}"
 PYTHONPATH="${PYTHONPATH:-$(pwd)/packages/ltx-pipelines/src:$(pwd)/packages/ltx-core/src}"
 USE_FP8_CAST="${USE_FP8_CAST:-1}"
 BATCH_MODEL_MODE="${BATCH_MODEL_MODE:-reuse}"
 SEED="${SEED:-42}"
-NSHARD="${NSHARD:-1}"
-SHARD="${SHARD:-0}"
 PROMPT_EMBEDS_DIR="${PROMPT_EMBEDS_DIR:-}"
 PROMPT_EMBEDS_PATH="${PROMPT_EMBEDS_PATH:-}"
 NEGATIVE_PROMPT_EMBEDS_PATH="${NEGATIVE_PROMPT_EMBEDS_PATH:-}"
@@ -37,6 +42,8 @@ CMD=(
   --gemma-root "$GEMMA_ROOT"
   --prompt-file "$PROMPT_FILE"
   --output-dir "$OUTPUT_DIR"
+  --height "$HEIGHT"
+  --width "$WIDTH"
   --seed "$SEED"
   --skip-existing
   --batch-model-mode "$BATCH_MODEL_MODE"

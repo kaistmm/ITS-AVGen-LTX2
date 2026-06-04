@@ -13,6 +13,8 @@ echo "  Align Model: ${ALIGN_MODEL}"
 echo "  Port: ${SERVER_PORT}"
 
 CUDA_VISIBLE_DEVICES="${GPU_ID}" \
+NCCL_P2P_DISABLE=1 \
+NCCL_IB_DISABLE=1 \
 python reward_model/vqa_server.py \
   --gpu "${GPU_ID}" \
   --addr "${SERVER_PORT}" \

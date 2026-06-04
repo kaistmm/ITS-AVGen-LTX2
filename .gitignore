@@ -23,6 +23,7 @@ tmp
 # Model checkpoints (ignored but tracked via .gitattributes)
 results/
 .checkpoints/
+.checkpoints_reward/
 checkpoints/
 
 # IDE and build artifacts
