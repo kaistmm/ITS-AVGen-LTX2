@@ -24,22 +24,32 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Supported Models](#supported-models)
-- [Prerequisites](#prerequisites)
-- [🚀 Getting Started](#-getting-started)
-  - [Installation](#installation)
-  - [Model Weights](#model-weights)
-  - [Reward Server Setup](#reward-server-setup)
-  - [Verification](#verification)
-- [Inference Guide](#inference-guide)
-  - [Reward Server Setup](#reward-server-setup-1)
-  - [Standard Inference](#standard-inference)
-  - [BON (Best-of-N)](#bon-best-of-n)
-  - [Advanced Settings](#advanced-settings)
-- [Citation](#citation)
-- [Acknowledgments](#acknowledgments)
+- [🎬 LTX2-ITS: Inference Time Scaling for Joint Audio-Video Generation](#-ltx2-its-inference-time-scaling-for-joint-audio-video-generation)
+  - [📋 Table of Contents](#-table-of-contents)
+  - [Overview](#overview)
+  - [Key Features](#key-features)
+  - [Supported Models](#supported-models)
+  - [Prerequisites](#prerequisites)
+  - [🚀 Getting Started](#-getting-started)
+    - [Installation](#installation)
+    - [Model Weights](#model-weights)
+      - [Main Model (Choose One)](#main-model-choose-one)
+      - [Supporting Models](#supporting-models)
+    - [Reward Server Setup](#reward-server-setup)
+    - [Verification](#verification)
+  - [Inference Guide](#inference-guide)
+    - [Reward Server Setup](#reward-server-setup-1)
+      - [Start the Server](#start-the-server)
+      - [Server Configuration](#server-configuration)
+    - [Standard Inference](#standard-inference)
+    - [BON (Best-of-N)](#bon-best-of-n)
+    - [Advanced Settings](#advanced-settings)
+      - [Reward Metrics](#reward-metrics)
+      - [Aggregation Methods](#aggregation-methods)
+      - [ARW (Adaptive Reward Weighting)](#arw-adaptive-reward-weighting)
+      - [Complete Configuration Example](#complete-configuration-example)
+  - [Citation](#citation)
+  - [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -122,36 +132,22 @@ Download from the [LTX-2.3 HuggingFace Repository](https://huggingface.co/Lightr
 
 #### Main Model (Choose One)
 
-<table>
-<tr>
-<td width="50%">
+| Model | Quality | Speed | VRAM |
+|-------|---------|-------|------|
+| **Development** | ✅ Better | — | ~48GB |
+| **Distilled** | Good | ⚡ 2-3x faster | 24GB |
 
-**Development (Recommended)**
 ```bash
-mkdir -p checkpoints/LTX2.3
-cd checkpoints/LTX2.3
+mkdir -p checkpoints/LTX2.3 && cd checkpoints/LTX2.3
+
+# Development (better quality)
 wget https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-22b-dev.safetensors
-cd ../..
-```
-✅ Better quality  
-⚠️ Requires ~48GB VRAM
 
-</td>
-<td width="50%">
-
-**Distilled (Faster)**
-```bash
-mkdir -p checkpoints/LTX2.3
-cd checkpoints/LTX2.3
+# Distilled (faster) — or download this instead
 wget https://huggingface.co/Lightricks/LTX-2.3/resolve/main/ltx-2.3-22b-distilled.safetensors
+
 cd ../..
 ```
-⚡ 2-3x faster  
-✅ 24GB VRAM sufficient
-
-</td>
-</tr>
-</table>
 
 > 💡 **Select which model to use** by editing `CHECKPOINT_PATH` in [`scripts/inference_one_ltx_bon.sh`](scripts/inference_one_ltx_bon.sh):
 > ```bash
