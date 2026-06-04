@@ -31,7 +31,7 @@ PY
 
 # Override defaults with environment variables
 OUTPUT_DIR="${OUTPUT_DIR:-./results/bon_output}"
-BON_SAMPLES="${BON_SAMPLES:-10}"
+BON_SAMPLES="${BON_SAMPLES:-5}"
 BON_SERVER_PORT="${BON_SERVER_PORT:-5002}"
 
 # Log configuration

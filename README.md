@@ -132,10 +132,10 @@ Download from the [LTX-2.3 HuggingFace Repository](https://huggingface.co/Lightr
 
 #### Main Model (Choose One)
 
-| Model | Quality | Speed | VRAM |
-|-------|---------|-------|------|
-| **Development** | ✅ Better | — | ~48GB |
-| **Distilled** | Good | ⚡ 2-3x faster | 24GB |
+| Model | Quality | Speed |
+|-------|---------|-------|
+| **Development** | ✅ Better | — |
+| **Distilled** | Good | ⚡ 2-3x faster |
 
 ```bash
 mkdir -p checkpoints/LTX2.3 && cd checkpoints/LTX2.3
