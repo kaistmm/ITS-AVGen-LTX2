@@ -77,7 +77,7 @@
 |---------|-------------|
 | 🚀 **No Retraining** | Works with any pre-trained LTX-2 model out-of-the-box |
 | 🎯 **BON (Best-of-N)** | Generate N candidates and select the best using reward ranking |
-| 🧬 **ARW** | Adaptive Reward Weighting for dynamic metric combination |
+| ⚖️ **ARW** | Adaptive Reward Weighting for dynamic metric combination |
 | 📊 **Multi-Reward** | Combine VideoReward, JavisScore, CLAP, and more |
 | ⚡ **Production-Ready** | Optimized for high-resolution output (480p, 720p, 1080p) |
 | 🔧 **Flexible Config** | Fine-tune all parameters via JSON configuration |
