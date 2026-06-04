@@ -21,13 +21,12 @@ tmp
 .wandb
 .nfs*
 
-# Model checkpoints (ignored but tracked via .gitattributes)
+# Model checkpoints (including machine-specific symlinks)
 results/
 .checkpoints
-.checkpoints/
-.checkpoints_reward/
-checkpoints/
-checkpoints_reward/
+.checkpoints_reward
+checkpoints
+checkpoints_reward
 
 # IDE and build artifacts
 .codex
