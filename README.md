@@ -8,7 +8,7 @@
 
 <br>
 
-[![Paper](https://img.shields.io/badge/📰-Paper-1f72be?style=flat)](https://openreview.net/forum?id=MHNFjjm5nO)
+[![Paper](https://img.shields.io/badge/📰-Paper-1f72be?style=flat)](https://arxiv.org/abs/2606.03183)
 [![Project](https://img.shields.io/badge/🚀-Project%20Page-50c878?style=flat)](https://jung-jaemin.github.io/ITS-AVGen-Proj/)
 [![Code](https://img.shields.io/badge/💻-Code-ff6b6b?style=flat)](https://github.com/kaistmm/ITS-AVGen-LTX2)
 
