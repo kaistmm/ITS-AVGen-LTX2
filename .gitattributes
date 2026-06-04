@@ -1,5 +1,0 @@
-# Large files - use git-lfs if installed, otherwise store directly
-*.safetensors filter=lfs diff=lfs merge=lfs -text
-*.sft filter=lfs diff=lfs merge=lfs -text
-*.pt filter=lfs diff=lfs merge=lfs -text
-*.mp4 filter=lfs diff=lfs merge=lfs -text
