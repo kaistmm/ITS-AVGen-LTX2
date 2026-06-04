@@ -12,6 +12,7 @@ PROMPT_FILE="${PROMPT_FILE:-./data/JavisBench/JavisBench-mini.csv}"
 OUTPUT_DIR="${OUTPUT_DIR:-./results/test_output}"
 HEIGHT="${HEIGHT:-512}"
 WIDTH="${WIDTH:-768}"
+NUM_INFERENCE_STEPS="${NUM_INFERENCE_STEPS:-}"
 
 CUDA_VISIBLE_DEVICES="${GPU_ID}"
 PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
@@ -50,6 +51,10 @@ CMD=(
   --num-shards "$NSHARD"
   --shard-index "$SHARD"
 )
+
+if [[ -n "$NUM_INFERENCE_STEPS" ]]; then
+  CMD+=(--num-inference-steps "$NUM_INFERENCE_STEPS")
+fi
 
 if [[ -n "$PROMPT_EMBEDS_DIR" ]]; then
   CMD+=(--prompt-embeds-dir "$PROMPT_EMBEDS_DIR")

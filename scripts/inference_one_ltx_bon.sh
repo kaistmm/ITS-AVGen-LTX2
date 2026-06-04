@@ -38,12 +38,14 @@ BON_SERVER_PORT="${BON_SERVER_PORT:-5002}"
 echo "BON Configuration:"
 echo "  Aggregation Method: ${BON_AGGREGATION_METHOD}"
 echo "  Samples: ${BON_SAMPLES}"
+echo "  Denoising Steps: ${NUM_INFERENCE_STEPS:-<model default>}"
 echo "  Reward Key: ${BON_REWARD_KEY}"
 echo "  Align Key: ${BON_ALIGN_KEY}"
 echo "  Config File: ${CONFIG_FILE}"
 
 # Run inference with BON
-CHECKPOINT_PATH="${CHECKPOINT_PATH:-./checkpoints/LTX2.3/ltx-2.3-22b-distilled.safetensors}" \
+CHECKPOINT_PATH="${CHECKPOINT_PATH:-./checkpoints/LTX2.3/ltx-2.3-22b-dev.safetensors}" \
+NUM_INFERENCE_STEPS="${NUM_INFERENCE_STEPS:-}" \
 OUTPUT_DIR="${OUTPUT_DIR}" \
 BON_SAMPLES="${BON_SAMPLES}" \
 BON_SERVER_PORT="${BON_SERVER_PORT}" \
