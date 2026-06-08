@@ -437,11 +437,11 @@ Automatically learns optimal metric weights during inference:
 If you find this work useful, please cite:
 
 ```bibtex
-@article{jung2026its,
-    title={Inference-Time Scaling for Joint Audio-Video Generation},
-    author={Jung, Jaemin and Rho, Kyeongha and Shin, Inkyu and Chung, Joon Son},
-    journal={Transactions on Machine Learning Research},
-    year={2026},
+@article{jung2026inference,
+  title={Inference-Time Scaling for Joint Audio-Video Generation},
+  author={Jung, Jaemin and Rho, Kyeongha and Shin, Inkyu and Chung, Joon Son},
+  journal={arXiv preprint arXiv:2606.03183},
+  year={2026}
 }
 ```
 
